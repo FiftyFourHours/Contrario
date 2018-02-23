@@ -30,6 +30,12 @@ public class PlayerSettingItemButton : MonoBehaviour {
 		PlayerPrefManager.playerList.Remove (refPlayer);
 		Destroy (this.gameObject);
 	}
+
+	public void onValueChanged(string value) {
+		if (this.refPlayer != null) {
+			this.refPlayer.name = value;
+		}
+	}	
 	/*
 	public void setSelected () {
 		playerSelectButton.GetComponent<Image> ().color = Color.blue;

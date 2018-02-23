@@ -14,11 +14,7 @@ public class PlayerSettingSceneScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		Debug.Log ("initializing settings scene");
-		// needed because initialization called twice (????)
-		// TODO understand what the heck is going on
-		PlayerPrefManager.playerList.Clear();
-		for (int i = 1; i < PlayerPrefManager.nbPlayer + 1; i++) {
+		for (int i = 1; i < 3; i++) {
 			PlayerPrefManager.playerList.Add (new Player ("Joueur " + i));
 		}
 		UIUtils.clearPanel (contentPanel);

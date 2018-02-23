@@ -12,14 +12,6 @@ public class GameState {
 
 	// Use this for initialization
 	public GameState () {
-		System.Random rand = new System.Random();
-		List<String> existingCards = new List<string>();
-		existingCards.AddRange (Constantes.WORDS_AND_DEFS);
-		for (int i = 0; i < PlayerPrefManager.nbCards; i++) {
-			int index = rand.Next(0, existingCards.Count - 1);
-			this.remainingCards.Add (new Card (existingCards[index]));
-			existingCards.Remove (existingCards[index]);
-		}
 		nextCard ();
 	}
 
