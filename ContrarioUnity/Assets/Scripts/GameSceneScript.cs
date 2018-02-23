@@ -32,7 +32,7 @@ public class GameSceneScript : MonoBehaviour {
 	public void populateGrid() {
 		UIUtils.clearPanel (playerSelectContentPanel);
 		foreach (Player p in PlayerPrefManager.playerList) {
-			Debug.Log (p.name);
+			Debug.Log ("Game Scene " + p.name);
 			GameObject go = (GameObject) Instantiate(playerFoundItemButton);
 			go.transform.SetParent(playerSelectContentPanel, false);
 			PlayerFoundItemButton itmBtn = go.GetComponent<PlayerFoundItemButton>();
@@ -45,7 +45,12 @@ public class GameSceneScript : MonoBehaviour {
 		p.score += 1;
 		itm.updateUI ();
 		gameState.nextCard ();
-		updateCard ();
+
+		if (gameState.currentCard != null) {
+			updateCard ();
+		} else {
+			quit ();
+		}
 		//populateGrid ();
 	}
 
@@ -64,6 +69,10 @@ public class GameSceneScript : MonoBehaviour {
 		
 
 	public void onQuitButtonClicked() {
+		quit ();
+	}
+
+	private void quit () {
 		SceneManager.LoadScene (Constantes.SCENE_WELCOME);
 	}
 }

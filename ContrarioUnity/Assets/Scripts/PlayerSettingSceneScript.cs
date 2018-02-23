@@ -14,7 +14,11 @@ public class PlayerSettingSceneScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		for (int i = 1; i < 3; i++) {
+		Debug.Log ("initializing settings scene");
+		// needed because initialization called twice (????)
+		// TODO understand what the heck is going on
+		PlayerPrefManager.playerList.Clear();
+		for (int i = 1; i < PlayerPrefManager.nbPlayer + 1; i++) {
 			PlayerPrefManager.playerList.Add (new Player ("Joueur " + i));
 		}
 		UIUtils.clearPanel (contentPanel);
@@ -24,18 +28,18 @@ public class PlayerSettingSceneScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
 	}
 
 	void populateGrid() {
 		foreach (Player p in PlayerPrefManager.playerList) {
-			Debug.Log (p.name);
+			Debug.Log ("Settings scene " + p.name);
 			GameObject go = (GameObject) Instantiate(playerSettingItemButton);
 			go.transform.SetParent(contentPanel, false);
 			PlayerSettingItemButton itmBtn = go.GetComponent<PlayerSettingItemButton>();
 			itmBtn.init(p);
 			//itmBtn.playerSelectButton.onClick.AddListener (() => onPlayerNumberClicked("player : " + itmBtn));
 		}
+		Debug.Log ("ending populateGrid");
 	}
 
 	public void onPlayerNumberClicked(PlayerSettingItemButton item) {

@@ -2,19 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+//using UnityEngine.SceneManagement;
+using AssemblyCSharp;
 
 public class PlayerSettingItemButton : MonoBehaviour {
 
 	public Button playerItemButton;
 	public Button supprPlayerButton;
-	public Text textPlayer;
+	public InputField inputPlayer;
+	private Player refPlayer;
 
 	// Use this for initialization
 	void Start () {
 
 	}
 	public void init(Player player) {
-		textPlayer.text = "" + player.name;
+		inputPlayer.text = "" + player.name;
+		refPlayer = player;
 	}
 
 	// Update is called once per frame
@@ -23,7 +27,8 @@ public class PlayerSettingItemButton : MonoBehaviour {
 	}
 
 	public void onDeleteClicked() {
-		
+		PlayerPrefManager.playerList.Remove (refPlayer);
+		Destroy (this.gameObject);
 	}
 	/*
 	public void setSelected () {
