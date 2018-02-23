@@ -14,13 +14,13 @@ public class PlayerSettingSceneScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		PlayerPrefManager.playerList.Clear();
-		for (int i = 1; i < 5; i++) {
+		int pNb = PlayerPrefManager.playerList.Count;
+
+		for (int i = pNb+1; i < 5; i++) {
 			PlayerPrefManager.playerList.Add (new Player ("Joueur " + i));
 		}
 		UIUtils.clearPanel (contentPanel);
 		populateGrid ();
-		//UIUtils.hideButtonWithCanvasGroup (startButton);
 	}
 	
 	// Update is called once per frame
@@ -29,22 +29,17 @@ public class PlayerSettingSceneScript : MonoBehaviour {
 
 	void populateGrid() {
 		foreach (Player p in PlayerPrefManager.playerList) {
-			Debug.Log ("Settings scene " + p.name);
 			GameObject go = (GameObject) Instantiate(playerSettingItemButton);
 			go.transform.SetParent(contentPanel, false);
 			PlayerSettingItemButton itmBtn = go.GetComponent<PlayerSettingItemButton>();
 			itmBtn.init(p);
-			//itmBtn.playerSelectButton.onClick.AddListener (() => onPlayerNumberClicked("player : " + itmBtn));
 		}
-		Debug.Log ("ending populateGrid");
 	}
 
 	public void onPlayerNumberClicked(PlayerSettingItemButton item) {
 	}
 
 	public void onGoButtonClicked () {
-		//PlayerPrefManager.nbPlayer = selectedPlayerItem.numberPlayer;
-
 		SceneManager.LoadScene (Constantes.SCENE_GAME);
 	}
 

@@ -14,11 +14,11 @@ public class GameSceneScript : MonoBehaviour {
 	public Transform topPanel;
 
 	public Transform modalPanel;
+	public Transform nextButton;
+	public Transform againButton;
+	public Transform newGameButton;
 
 	public Transform playerSelectContentPanel;
-
-
-	public Image backCircleImage;
 
 	public Text textQuestion;
 	public Text textAnswer;
@@ -26,8 +26,7 @@ public class GameSceneScript : MonoBehaviour {
 	public Text textSecondHint;
 
 	public Text modalTextInfo;
-
-	//private Action showModal;
+	public Text nextButtonText;
 
 	private GameState gameState;
 
@@ -35,8 +34,9 @@ public class GameSceneScript : MonoBehaviour {
 	void Start () {
 		fakeFill ();
 		gameState = new GameState ();
-		modalTextInfo.text = gameState.getPopupMessageFromContext ();
+//		modalTextInfo.text = gameState.getPopupMessageFromContext ();
 		populatePlayerGrid ();
+		gameState.nextCard ();
 		showModal (0f, 0f);
 	}
 
@@ -59,9 +59,10 @@ public class GameSceneScript : MonoBehaviour {
 	public void onPlayerClicked(Player p, PlayerFoundItemButton itm) {
 		p.score += 1;
 		gameState.lastFoundPlayer (p);
-		itm.updateUI ();
+		itm.updateUI (); // Opti : on update name + score alors que seul le score en a besoin
 		itm.playParticle ();
 
+		gameState.nextCard ();
 		showModal (0f, 0.5f);
 
 	}
@@ -90,8 +91,9 @@ public class GameSceneScript : MonoBehaviour {
 
 	private void showModal(float begining, float startIn) {
 		modalPanel.gameObject.SetActive (true);
-
-		modalTextInfo.text = gameState.getPopupMessageFromContext ();
+		ContextEnum context = gameState.getContext ();
+		modalTextInfo.text = modalMessage(context);
+		setModalButtons (context);
 		StartCoroutine(Animations.FadeInCRWithCallBack(begining, startIn, 0.3f, modalPanel.gameObject, onModalAppear));
 	}
 
@@ -100,15 +102,90 @@ public class GameSceneScript : MonoBehaviour {
 	}
 
 	private void onModalDisappear() {
+		nextButton.gameObject.SetActive (false);
+		againButton.gameObject.SetActive (false);
+		newGameButton.gameObject.SetActive (false);
 		modalPanel.gameObject.SetActive (false);
-		gameState.nextCard ();
-		updateCardUI ();
+
+		if (gameState.currentCard == null) {
+			showModal (0f, 0f);
+		} else {
+			updateCardUI ();
+		}
 	}
 
 	private void onModalAppear() {
 	}
 
-	public void onModalButtonClicked() {
+	public void onNextButtonClicked() {
 		hideModal ();
+	}
+
+	public void onAgainButtonClicked() {
+		gameState.winCardEndGame += 5;
+		hideModal ();
+	}
+
+	public void onNewGameButtonClicked() {
+		hideModal ();
+		foreach (Player p in PlayerPrefManager.playerList) {
+			p.resetScore ();
+		}
+		SceneManager.LoadScene (Constantes.SCENE_PLAYER_SETTINGS);
+	}
+
+	private string modalMessage (ContextEnum c) {
+		string msg = "";
+		switch (c) {
+			case ContextEnum.GameStart:
+				msg = "Choisissez le premier joueur puis passez lui le téléphone";
+				break;
+			case ContextEnum.DiscoveredCard:
+				msg = "Passe le téléphone à " + gameState.lastPlayerToGuess.name;
+				break;
+			case ContextEnum.CardNotFound:
+				msg = "Personne n'a trouvé, fais deviner une autre carte";
+				break;
+			case ContextEnum.EndOfCardStack:
+				msg = "Vous avez exploré toutes les cartes de Contrario !";
+					
+				Player ahead = PlayerPrefManager.aheadPlayer ();
+				if (ahead != null) {
+					msg += " Bravo à " + ahead.name + " qui a le plus haut score !";
+				}
+				break;
+			case ContextEnum.MaxScoreReached:
+				msg = "Bravo à " + gameState.winner.name + " qui a gagné !";
+				break;
+			default:
+				break;
+		}
+		return msg;
+	}
+
+	private void setModalButtons (ContextEnum c) {
+		switch (c) {
+			case ContextEnum.GameStart:
+				nextButtonText.text = "C'est parti !";
+				nextButton.gameObject.SetActive (true);
+				break;
+			case ContextEnum.DiscoveredCard:
+				nextButtonText.text = "C'est fait !";
+				nextButton.gameObject.SetActive (true);
+				break;
+			case ContextEnum.CardNotFound:
+				nextButtonText.text = "Ok je réessaye !";
+				nextButton.gameObject.SetActive (true);
+				break;
+			case ContextEnum.EndOfCardStack:
+				newGameButton.gameObject.SetActive (true);
+				break;
+			case ContextEnum.MaxScoreReached:
+				againButton.gameObject.SetActive (true);
+				newGameButton.gameObject.SetActive (true);
+				break;
+			default:
+				break;
+		}
 	}
 }
