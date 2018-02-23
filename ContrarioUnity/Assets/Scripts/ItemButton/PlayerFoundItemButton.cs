@@ -8,6 +8,7 @@ public class PlayerFoundItemButton : MonoBehaviour {
 	public Button playerItemButton;
 	public Text textPlayerName;
 	public Text textPlayerScore;
+	public ParticleSystem particlSystem;
 	private Player player;
 
 
@@ -23,6 +24,7 @@ public class PlayerFoundItemButton : MonoBehaviour {
 	public void updateUI () {
 		textPlayerName.text = player.name;
 		textPlayerScore.text = "" + player.score;
+		particlSystem.Play();
 	}
 
 	// Update is called once per frame

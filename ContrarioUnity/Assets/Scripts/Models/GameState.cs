@@ -7,36 +7,49 @@ using AssemblyCSharp;
 public class GameState {
 
 	public Card currentCard;
-	public List<Card> remainingCards;
+	public int nbCard = 0;
+	private int winCardEndGame = 5;
 
+	public Player lastPlayerToGuess = null;
 
 	// Use this for initialization
 	public GameState () {
-		System.Random rand = new System.Random();
-		List<String> existingCards = new List<string>();
-		existingCards.AddRange (Constantes.WORDS_AND_DEFS);
-		for (int i = 0; i < PlayerPrefManager.nbCards; i++) {
-			int index = rand.Next(0, existingCards.Count - 1);
-			this.remainingCards.Add (new Card (existingCards[index]));
-			existingCards.Remove (existingCards[index]);
-		}
 		nextCard ();
 	}
 
 	public Card nextCard () {
-		if (this.remainingCards.Count > 1) {
-			// récupère un mot en random
-			System.Random rand = new System.Random();
-//			int val = rand.Next(0, Constantes.WORDS_AND_DEFS.Length - 1);
-			int index = rand.Next(0, this.remainingCards.Count - 1);
-//			this.currentCard = new Card (Constantes.WORDS_AND_DEFS[val]);
-			this.currentCard = this.remainingCards[index];
-			this.remainingCards.Remove (this.currentCard);
+		// récupère un mot en random
+		System.Random rand = new System.Random();
+		int val = rand.Next(0, Constantes.WORDS_AND_DEFS.Length);
+		this.currentCard = new Card (Constantes.WORDS_AND_DEFS[val]);
 
-			return this.currentCard; // useful ?
+		nbCard++;
+
+		return this.currentCard; // useful ?
+	}
+
+	public void lastFoundPlayer (Player p) {
+		lastPlayerToGuess = p;
+	}
+
+	public string getPopupMessageFromContext () {
+		if (nbCard <= 1) {
+			// Cas de base
+			return "Choisissez le premier joueur puis passez lui le téléphone";
 		} else {
-			this.currentCard = null;
-			return null;
+			// Est ce que quelqu'un à gagné ? 
+			Player winnerMaybe = PlayerPrefManager.isWinnerPlayer(winCardEndGame);
+			if (winnerMaybe != null) {
+				return "Bravo à " + winnerMaybe.name + " qui a gagné !";
+			} else {
+				if (lastPlayerToGuess == null) {
+					return "Personne n'a trouvé, fais deviner une autre carte";
+				} else {
+					return "Passe le téléphone à " + lastPlayerToGuess.name;
+				}
+			}
+			// Si personne n'a gagner, dans ce cas il faut juste passer le tel au suivant 
+
 		}
 	}
 }

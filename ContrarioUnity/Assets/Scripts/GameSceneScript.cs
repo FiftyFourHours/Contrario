@@ -13,6 +13,8 @@ public class GameSceneScript : MonoBehaviour {
 	public Transform panelFooter;
 	public Transform topPanel;
 
+	public Transform modalPanel;
+
 	public Transform playerSelectContentPanel;
 
 	public Text textQuestion;
@@ -20,19 +22,29 @@ public class GameSceneScript : MonoBehaviour {
 	public Text textFirstHint;
 	public Text textSecondHint;
 
+	public Text modalTextInfo;
+
+	//private Action showModal;
+
 	private GameState gameState;
 
 	// Use this for initialization
 	void Start () {
+		fakeFill ();
 		gameState = new GameState ();
-		populateGrid ();
-		updateCard ();
+		modalTextInfo.text = gameState.getPopupMessageFromContext ();
+		populatePlayerGrid ();
+		showModal (0f, 0f);
 	}
 
-	public void populateGrid() {
+	private void fakeFill() {
+		if (PlayerPrefManager.playerList.Count == 0) {
+			PlayerPrefManager.fakeFill ();
+		}
+	}
+	public void populatePlayerGrid() {
 		UIUtils.clearPanel (playerSelectContentPanel);
 		foreach (Player p in PlayerPrefManager.playerList) {
-			Debug.Log ("Game Scene " + p.name);
 			GameObject go = (GameObject) Instantiate(playerFoundItemButton);
 			go.transform.SetParent(playerSelectContentPanel, false);
 			PlayerFoundItemButton itmBtn = go.GetComponent<PlayerFoundItemButton>();
@@ -43,30 +55,25 @@ public class GameSceneScript : MonoBehaviour {
 
 	public void onPlayerClicked(Player p, PlayerFoundItemButton itm) {
 		p.score += 1;
+		gameState.lastFoundPlayer (p);
 		itm.updateUI ();
-		gameState.nextCard ();
 
-		if (gameState.currentCard != null) {
-			updateCard ();
-		} else {
-			quit ();
-		}
-		//populateGrid ();
+		showModal (0f, 0.4f);
+
 	}
 
-	public void updateCard() {
+	public void updateCardUI() {
 		this.textQuestion.text = gameState.currentCard.question;
 		this.textAnswer.text = gameState.currentCard.answer;
 		this.textFirstHint.text = gameState.currentCard.hint1;
 		this.textSecondHint.text = gameState.currentCard.hint2;
 
 	}
-
-	// Update is called once per frame
-	void Update () {
-
-	}
 		
+	public void onNobodyButtonClicked() {
+		showModal (0f, 0f);
+	}
+
 
 	public void onQuitButtonClicked() {
 		quit ();
@@ -74,5 +81,28 @@ public class GameSceneScript : MonoBehaviour {
 
 	private void quit () {
 		SceneManager.LoadScene (Constantes.SCENE_WELCOME);
+	}
+
+	private void showModal(float begining, float startIn) {
+		modalPanel.gameObject.SetActive (true);
+		modalTextInfo.text = gameState.getPopupMessageFromContext ();
+		StartCoroutine(Animations.FadeInCRWithCallBack(begining, startIn, 0.3f, modalPanel.gameObject, onModalAppear));
+	}
+
+	private void hideModal() {
+		StartCoroutine(Animations.FadeOutCRWithCallBack(0f, 0f, 0.3f, modalPanel.gameObject, onModalDisappear));
+	}
+
+	private void onModalDisappear() {
+		modalPanel.gameObject.SetActive (false);
+		gameState.nextCard ();
+		updateCardUI ();
+	}
+
+	private void onModalAppear() {
+	}
+
+	public void onModalButtonClicked() {
+		hideModal ();
 	}
 }
