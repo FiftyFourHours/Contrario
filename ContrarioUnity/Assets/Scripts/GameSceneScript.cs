@@ -37,15 +37,16 @@ public class GameSceneScript : MonoBehaviour {
 			go.transform.SetParent(playerSelectContentPanel, false);
 			PlayerFoundItemButton itmBtn = go.GetComponent<PlayerFoundItemButton>();
 			itmBtn.init(p);
-			itmBtn.playerItemButton.onClick.AddListener (() => onPlayerClicked(p));
+			itmBtn.playerItemButton.onClick.AddListener (() => onPlayerClicked(p, itmBtn));
 		}
 	}
 
-	public void onPlayerClicked(Player p) {
+	public void onPlayerClicked(Player p, PlayerFoundItemButton itm) {
 		p.score += 1;
+		itm.updateUI ();
 		gameState.nextCard ();
 		updateCard ();
-		populateGrid ();
+		//populateGrid ();
 	}
 
 	public void updateCard() {
