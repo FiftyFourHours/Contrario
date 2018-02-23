@@ -57,8 +57,9 @@ public class GameSceneScript : MonoBehaviour {
 		p.score += 1;
 		gameState.lastFoundPlayer (p);
 		itm.updateUI ();
+		itm.playParticle ();
 
-		showModal (0f, 0.4f);
+		showModal (0f, 0.5f);
 
 	}
 
@@ -85,6 +86,7 @@ public class GameSceneScript : MonoBehaviour {
 
 	private void showModal(float begining, float startIn) {
 		modalPanel.gameObject.SetActive (true);
+
 		modalTextInfo.text = gameState.getPopupMessageFromContext ();
 		StartCoroutine(Animations.FadeInCRWithCallBack(begining, startIn, 0.3f, modalPanel.gameObject, onModalAppear));
 	}
