@@ -35,6 +35,8 @@ public class GameSceneScript : MonoBehaviour {
 
 	private GameState gameState;
 
+	private Vector3 initialCardPanelPosition;
+
 	// Use this for initialization
 	void Start () {
 		gamePanel.gameObject.SetActive (false);
@@ -45,6 +47,7 @@ public class GameSceneScript : MonoBehaviour {
 		populatePlayerGrid ();
 		gameState.nextCard ();
 		showModal (0f, 0f);
+		initialCardPanelPosition = panelCard.position;
 		StartCoroutine(Animations.FadeInCR (0f, 0f, 0.3f, panelAllGame.gameObject));
 	}
 
@@ -119,11 +122,13 @@ public class GameSceneScript : MonoBehaviour {
 			showModal (0f, 0f);
 		} else {
 			updateCardUI ();
+			StartCoroutine (Animations.appearTop (0f, 0f, 0.8f, new Vector3 (panelCard.position.x, panelCard.position.y+ 10, panelCard.position.z), initialCardPanelPosition, panelCard));
 		}
 	}
 
 	private void onModalAppear() {
 		gamePanel.gameObject.SetActive (true);
+		panelCard.Translate (0f, 10f, 0f);
 	}
 
 	public void onNextButtonClicked() {
@@ -166,7 +171,7 @@ public class GameSceneScript : MonoBehaviour {
 				}
 				break;
 			case ContextEnum.MaxScoreReached:
-				modalTextTitle.text = "Bravo " + gameState.winner.name;
+				modalTextTitle.text = gameState.winner.name + " a gagné !";
 				modalTextInfo.text = "On continue ou on recommence ?";
 				break;
 			default:

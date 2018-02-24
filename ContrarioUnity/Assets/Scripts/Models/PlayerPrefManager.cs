@@ -26,10 +26,8 @@ namespace AssemblyCSharp
 		}
 			
 		public static void fakeFill() {
-			playerList.Add(new Player("Pedro"));
-			playerList.Add(new Player("Carlotta"));
-			playerList.Add(new Player("Joe"));
-			playerList.Add(new Player("Bobinette"));
+			playerList.Add(new Player("Joueur 1"));
+			playerList.Add(new Player("Joueur 2"));
 		}
 	}
 }

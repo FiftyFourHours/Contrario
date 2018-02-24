@@ -122,6 +122,29 @@ namespace AssemblyCSharp {
 			yield break;
 		}
 
+
+		public static IEnumerator appearTop(float begining, float startIn, float duration,
+										Vector3 startPos, Vector3 endPos, Transform transform)
+		{
+			float thisDuration = duration;
+			float currentTime = begining;
+			yield return new WaitForSeconds(startIn);
+			while(currentTime < thisDuration)
+			{
+				if (transform != null)
+					transform.position = Vector3.Lerp(startPos, endPos, Mathf.SmoothStep(0.0f, 1.0f, Mathf.SmoothStep(0.0f, 1.0f, currentTime/thisDuration)));
+
+
+				currentTime += Time.deltaTime;
+				yield return null;
+			}
+			yield break;
+		}
+
+		public static float bounce (float t) {
+			return Mathf.Sin(Mathf.Clamp01(t) * Mathf.PI);
+		}
+
 		public static IEnumerator TiltRight(float begining, float startIn, float duration, Transform transform)
 		{
 			float thisDuration = duration;
