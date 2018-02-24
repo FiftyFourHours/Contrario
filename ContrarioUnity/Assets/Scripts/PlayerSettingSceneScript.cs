@@ -12,39 +12,41 @@ public class PlayerSettingSceneScript : MonoBehaviour {
 	public Transform contentPanel;
 	public Button addPlayer;
 
+	public Transform panelAllGame;
+
 	// Use this for initialization
 	void Start () {
-		PlayerPrefManager.playerList.Clear();
-		for (int i = 1; i < 5; i++) {
+		panelAllGame.GetComponent<CanvasGroup> ().alpha = 0f;
+		int pNb = PlayerPrefManager.playerList.Count;
+		for (int i = pNb+1; i < 5; i++) {
 			PlayerPrefManager.playerList.Add (new Player ("Joueur " + i));
 		}
 		UIUtils.clearPanel (contentPanel);
 		populateGrid ();
-		//UIUtils.hideButtonWithCanvasGroup (startButton);
+		StartCoroutine(Animations.FadeInCR (0f, 0f, 0.6f, panelAllGame.gameObject));
 	}
-	
+		
 	// Update is called once per frame
 	void Update () {
 	}
 
 	void populateGrid() {
 		foreach (Player p in PlayerPrefManager.playerList) {
-			Debug.Log ("Settings scene " + p.name);
 			GameObject go = (GameObject) Instantiate(playerSettingItemButton);
 			go.transform.SetParent(contentPanel, false);
 			PlayerSettingItemButton itmBtn = go.GetComponent<PlayerSettingItemButton>();
 			itmBtn.init(p);
-			//itmBtn.playerSelectButton.onClick.AddListener (() => onPlayerNumberClicked("player : " + itmBtn));
 		}
-		Debug.Log ("ending populateGrid");
 	}
 
 	public void onPlayerNumberClicked(PlayerSettingItemButton item) {
 	}
 
 	public void onGoButtonClicked () {
-		//PlayerPrefManager.nbPlayer = selectedPlayerItem.numberPlayer;
+		StartCoroutine(Animations.FadeOutCRWithCallBack (0f, 0f, 0.3f, panelAllGame.gameObject, onFadeOutFinished));
+	}
 
+	public void onFadeOutFinished() {
 		SceneManager.LoadScene (Constantes.SCENE_GAME);
 	}
 
