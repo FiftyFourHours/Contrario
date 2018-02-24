@@ -21,6 +21,7 @@ namespace AssemblyCSharp {
 				currentTime += Time.deltaTime;
 				yield return null;
 			}
+			go.GetComponent<CanvasGroup> ().alpha = 1f;
 			yield break;
 		}
 

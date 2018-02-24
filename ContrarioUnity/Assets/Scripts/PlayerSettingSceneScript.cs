@@ -18,16 +18,32 @@ public class PlayerSettingSceneScript : MonoBehaviour {
 	void Start () {
 		panelAllGame.GetComponent<CanvasGroup> ().alpha = 0f;
 		int pNb = PlayerPrefManager.playerList.Count;
-		for (int i = pNb+1; i < 5; i++) {
-			PlayerPrefManager.playerList.Add (new Player ("Joueur " + i));
+		clearPlayersInPanel ();
+		if (pNb > 0) {
+			populateGrid ();
+		} else {
+			addDefaultPlaceholders ();
 		}
-		UIUtils.clearPanel (contentPanel);
-		populateGrid ();
+
 		StartCoroutine(Animations.FadeInCR (0f, 0f, 0.6f, panelAllGame.gameObject));
 	}
-		
+
+	private void addDefaultPlaceholders() {
+		GameObject go = (GameObject) Instantiate(playerSettingItemButton);
+		go.transform.SetParent(contentPanel, false);
+		PlayerSettingItemButton itmBtn = go.GetComponent<PlayerSettingItemButton>();
+		itmBtn.transform.SetSiblingIndex (contentPanel.GetComponentsInChildren<PlayerSettingItemButton>().Length - 1);
+		itmBtn.init();
+	}
+
 	// Update is called once per frame
 	void Update () {
+	}
+
+	private void clearPlayersInPanel() {
+		foreach (PlayerSettingItemButton child in contentPanel.GetComponentsInChildren<PlayerSettingItemButton>()) {
+			GameObject.Destroy(child.gameObject);
+		}
 	}
 
 	void populateGrid() {
@@ -35,6 +51,8 @@ public class PlayerSettingSceneScript : MonoBehaviour {
 			GameObject go = (GameObject) Instantiate(playerSettingItemButton);
 			go.transform.SetParent(contentPanel, false);
 			PlayerSettingItemButton itmBtn = go.GetComponent<PlayerSettingItemButton>();
+
+			itmBtn.transform.SetSiblingIndex (contentPanel.GetComponentsInChildren<PlayerSettingItemButton>().Length - 1);
 			itmBtn.init(p);
 		}
 	}
@@ -47,12 +65,20 @@ public class PlayerSettingSceneScript : MonoBehaviour {
 	}
 
 	public void onFadeOutFinished() {
+		PlayerPrefManager.playerList.Clear ();
+		foreach (PlayerSettingItemButton child in contentPanel.GetComponentsInChildren<PlayerSettingItemButton>()) {
+			if (child.refPlayer != null) {
+				PlayerPrefManager.playerList.Add (child.refPlayer);
+				//PlayerPrefManager.playerList.Add (new Player(child.refPlayer.name));
+			}
+		}
 		SceneManager.LoadScene (Constantes.SCENE_GAME);
 	}
 
 	public void onAddPlayerButtonClicked() {
-		PlayerPrefManager.playerList.Add (new Player ("Joueur " + (PlayerPrefManager.playerList.Count + 1)));
-		UIUtils.clearPanel (contentPanel);
-		populateGrid ();
+//		PlayerPrefManager.playerList.Add (new Player ("Joueur " + (PlayerPrefManager.playerList.Count + 1)));
+		addDefaultPlaceholders();
+		//clearPlayersInPanel ();
+		//populateGrid ();
 	}
 }

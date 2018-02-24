@@ -8,37 +8,41 @@ using AssemblyCSharp;
 public class PlayerSettingItemButton : MonoBehaviour {
 
 	public Button playerItemButton;
-	public Button supprPlayerButton;
 	public InputField inputPlayer;
-	private Player refPlayer;
+	public Player refPlayer = null;
 
 	// Use this for initialization
 	void Start () {
 
 	}
-	public void init(Player player) {
-		inputPlayer.text = "" + player.name;
-		refPlayer = player;
+	public void init() {
+	}
+	public void init(Player p) {
+		refPlayer = p;
+		inputPlayer.text = p.name;
 	}
 
 	// Update is called once per frame
 	void Update () {
 
 	}
-
-	public void onDeleteClicked() {
-		PlayerPrefManager.playerList.Remove (refPlayer);
-		Destroy (this.gameObject);
-	}
-
+		
 	public void onValueChanged(string value) {
 		int maxLenght = 20;
+		if (value == "") { // chaine vide veut dire pas de joueur, donc on supprime
+			refPlayer = null;
+			return;
+		}
+
 		if (value.Length > maxLenght) {
 			value = value.Substring (0, maxLenght);
 			inputPlayer.text = value;
 		}
-		if (this.refPlayer != null) {
-			this.refPlayer.name = value;
+
+		if (refPlayer == null) {
+			refPlayer = new Player (value);
+		} else {
+			refPlayer.name = value;
 		}
 	}	
 	/*

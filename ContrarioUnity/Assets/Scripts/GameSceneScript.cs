@@ -19,6 +19,7 @@ public class GameSceneScript : MonoBehaviour {
 	public Transform newGameButton;
 
 	public Transform playerSelectContentPanel;
+	public Transform gamePanel;
 
 	public Transform panelAllGame;
 
@@ -27,13 +28,16 @@ public class GameSceneScript : MonoBehaviour {
 	public Text textFirstHint;
 	public Text textSecondHint;
 
+	public Text modalTextTitle;
 	public Text modalTextInfo;
+
 	public Text nextButtonText;
 
 	private GameState gameState;
 
 	// Use this for initialization
 	void Start () {
+		gamePanel.gameObject.SetActive (false);
 		panelAllGame.GetComponent<CanvasGroup> ().alpha = 0f;
 		fakeFill ();
 		gameState = new GameState ();
@@ -41,7 +45,7 @@ public class GameSceneScript : MonoBehaviour {
 		populatePlayerGrid ();
 		gameState.nextCard ();
 		showModal (0f, 0f);
-		StartCoroutine(Animations.FadeInCR (0f, 0f, 0.6f, panelAllGame.gameObject));
+		StartCoroutine(Animations.FadeInCR (0f, 0f, 0.3f, panelAllGame.gameObject));
 	}
 
 	private void fakeFill() {
@@ -96,13 +100,13 @@ public class GameSceneScript : MonoBehaviour {
 	private void showModal(float begining, float startIn) {
 		modalPanel.gameObject.SetActive (true);
 		ContextEnum context = gameState.getContext ();
-		modalTextInfo.text = modalMessage(context);
+		modalMessage(context);
 		setModalButtons (context);
-		StartCoroutine(Animations.FadeInCRWithCallBack(begining, startIn, 0.3f, modalPanel.gameObject, onModalAppear));
+		StartCoroutine(Animations.FadeInCRWithCallBack(begining, startIn, 0.4f, modalPanel.gameObject, onModalAppear));
 	}
 
 	private void hideModal() {
-		StartCoroutine(Animations.FadeOutCRWithCallBack(0f, 0f, 0.3f, modalPanel.gameObject, onModalDisappear));
+		StartCoroutine(Animations.FadeOutCRWithCallBack(0f, 0f, 0.4f, modalPanel.gameObject, onModalDisappear));
 	}
 
 	private void onModalDisappear() {
@@ -119,6 +123,7 @@ public class GameSceneScript : MonoBehaviour {
 	}
 
 	private void onModalAppear() {
+		gamePanel.gameObject.SetActive (true);
 	}
 
 	public void onNextButtonClicked() {
@@ -138,33 +143,35 @@ public class GameSceneScript : MonoBehaviour {
 		SceneManager.LoadScene (Constantes.SCENE_PLAYER_SETTINGS);
 	}
 
-	private string modalMessage (ContextEnum c) {
-		string msg = "";
+	private void modalMessage (ContextEnum c) {
 		switch (c) {
 			case ContextEnum.GameStart:
-				msg = "Le plus jeune joueur est le premier lecteur. Passez-lui le téléphone";
+				modalTextTitle.text = "Ça va commencer";
+				modalTextInfo.text = "Le plus jeune joueur est le premier lecteur. Passe-lui le téléphone.";
 				break;
 			case ContextEnum.DiscoveredCard:
-				msg = "Passe le téléphone à " + gameState.lastPlayerToGuess.name;
+				modalTextTitle.text = "Bien joué " + gameState.lastPlayerToGuess.name;
+				modalTextInfo.text = "À son tour de lire, passe-lui le téléphone." ;
 				break;
 			case ContextEnum.CardNotFound:
-				msg = "Personne n'a trouvé, fais deviner une autre carte";
+				modalTextTitle.text = "C'était pourtant facile...";
+				modalTextInfo.text = "Personne n'a trouvé, fais deviner une autre carte";
 				break;
 			case ContextEnum.EndOfCardStack:
-				msg = "Vous avez exploré toutes les cartes de Contrario !";
-					
+				modalTextTitle.text = "Félicitations !";
+				modalTextInfo.text = "Vous avez exploré toutes les cartes de Contrario !";
 				Player ahead = PlayerPrefManager.aheadPlayer ();
 				if (ahead != null) {
-					msg += " Bravo à " + ahead.name + " qui a le plus haut score !";
+					modalTextInfo.text += " Bravo à " + ahead.name + " qui a le plus haut score !";
 				}
 				break;
 			case ContextEnum.MaxScoreReached:
-				msg = "Bravo à " + gameState.winner.name + " qui a gagné !";
+				modalTextTitle.text = "Bravo " + gameState.winner.name;
+				modalTextInfo.text = "On continue ou on recommence ?";
 				break;
 			default:
 				break;
 		}
-		return msg;
 	}
 
 	private void setModalButtons (ContextEnum c) {
