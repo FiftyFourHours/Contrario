@@ -32,6 +32,11 @@ public class PlayerSettingItemButton : MonoBehaviour {
 	}
 
 	public void onValueChanged(string value) {
+		int maxLenght = 20;
+		if (value.Length > maxLenght) {
+			value = value.Substring (0, maxLenght);
+			inputPlayer.text = value;
+		}
 		if (this.refPlayer != null) {
 			this.refPlayer.name = value;
 		}

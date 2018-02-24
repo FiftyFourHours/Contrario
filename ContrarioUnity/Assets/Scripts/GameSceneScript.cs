@@ -17,6 +17,9 @@ public class GameSceneScript : MonoBehaviour {
 
 	public Transform playerSelectContentPanel;
 
+
+	public Image backCircleImage;
+
 	public Text textQuestion;
 	public Text textAnswer;
 	public Text textFirstHint;
@@ -71,6 +74,7 @@ public class GameSceneScript : MonoBehaviour {
 
 	}
 		
+
 	public void onNobodyButtonClicked() {
 		showModal (0f, 0f);
 	}
