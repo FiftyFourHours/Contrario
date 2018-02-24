@@ -142,7 +142,7 @@ public class GameSceneScript : MonoBehaviour {
 		string msg = "";
 		switch (c) {
 			case ContextEnum.GameStart:
-				msg = "Choisissez le premier joueur puis passez lui le téléphone";
+				msg = "Le plus jeune joueur est le premier lecteur. Passez-lui le téléphone";
 				break;
 			case ContextEnum.DiscoveredCard:
 				msg = "Passe le téléphone à " + gameState.lastPlayerToGuess.name;
