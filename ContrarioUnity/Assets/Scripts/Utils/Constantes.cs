@@ -8,6 +8,7 @@ public class Constantes
 	public const string SCENE_WELCOME = "MainScene";
 	public const string SCENE_PLAYER_SETTINGS = "PlayerSettingsScene";
 	public const string SCENE_GAME = "GameScene";
+	public const string SCENE_TUTORIAL = "TutorialScene";
 
 
 	public static readonly string[] WORDS_AND_DEFS = {

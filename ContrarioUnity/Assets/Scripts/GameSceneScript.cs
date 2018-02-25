@@ -128,12 +128,12 @@ public class GameSceneScript : MonoBehaviour {
 			showModal (0f, 0f);
 		} else {
 			updateCardUI ();
-			disableReader ();
 			StartCoroutine (Animations.appearTop (0f, 0f, 0.8f, new Vector3 (panelCard.position.x, panelCard.position.y+ 10, panelCard.position.z), initialCardPanelPosition, panelCard));
 		}
 	}
 
 	private void onModalAppear() {
+		disableReader ();
 		gamePanel.gameObject.SetActive (true);
 		panelCard.Translate (0f, 10f, 0f);
 	}
@@ -225,6 +225,7 @@ public class GameSceneScript : MonoBehaviour {
 				pBtn.playerItemButton.interactable = true;
 				if (pBtn.compare (toCompare)) {
 					pBtn.playerItemButton.interactable = false;
+//					pBtn.playerItemButton.targetGraphic = "";
 				}
 			}
 		}
