@@ -21,6 +21,8 @@ public class GameSceneScript : MonoBehaviour {
 	public Transform playerSelectContentPanel;
 	public Transform gamePanel;
 
+	public Transform confirmQuitPanel;
+
 	public Transform panelAllGame;
 
 	public Text textQuestion;
@@ -47,6 +49,8 @@ public class GameSceneScript : MonoBehaviour {
 		gamePanel.gameObject.SetActive (false);
 		hideCup ();
 		panelAllGame.GetComponent<CanvasGroup> ().alpha = 0f;
+		confirmQuitPanel.GetComponent<CanvasGroup> ().alpha = 0f;
+		confirmQuitPanel.gameObject.SetActive (false);
 		fakeFill ();
 		gameState = new GameState ();
 
@@ -102,7 +106,31 @@ public class GameSceneScript : MonoBehaviour {
 
 
 	public void onQuitButtonClicked() {
+		
+		showConfirmQuitPanel ();
+	}
+
+	public void showConfirmQuitPanel() {
+		confirmQuitPanel.gameObject.SetActive (true);
+		StartCoroutine (Animations.FadeInCR (0f, 0f, 0.5f, confirmQuitPanel.gameObject));
+	}
+
+	public void onYesQuitClicked() {
 		quit ();
+	}
+
+	public void onNoQuitClicked() {
+		StartCoroutine (Animations.FadeOutCRWithCallBack (0f, 0f, 0.3f, confirmQuitPanel.gameObject, onQuitPanelDisapear));
+	}
+
+	public void onQuitPanelDisapear() {
+		confirmQuitPanel.gameObject.SetActive (false);
+	}
+
+	void Update() {
+		if (Input.GetKeyDown(KeyCode.Escape)) {
+			showConfirmQuitPanel ();
+		}
 	}
 
 	private void quit () {
@@ -135,12 +163,12 @@ public class GameSceneScript : MonoBehaviour {
 			showModal (0f, 0f);
 		} else {
 			updateCardUI ();
-			disableReader ();
 			StartCoroutine (Animations.appearTop (0f, 0f, 0.8f, new Vector3 (panelCard.position.x, panelCard.position.y+ 10, panelCard.position.z), initialCardPanelPosition, panelCard));
 		}
 	}
 
 	private void onModalAppear() {
+		disableReader ();
 		gamePanel.gameObject.SetActive (true);
 		if (gameState.getContext () == ContextEnum.MaxScoreReached)
 			showAndAnimCup ();
@@ -156,6 +184,7 @@ public class GameSceneScript : MonoBehaviour {
 		gameState.winCardEndGame += 5;
 		hideModal ();
 	}
+
 
 	public void onNewGameButtonClicked() {
 		hideModal ();
@@ -242,9 +271,10 @@ public class GameSceneScript : MonoBehaviour {
 
 		if (toCompare != null) {
 			foreach (PlayerFoundItemButton pBtn in playerSelectContentPanel.GetComponentsInChildren<PlayerFoundItemButton> ()) {
-				pBtn.playerItemButton.interactable = true;
+				pBtn.activateItem ();
 				if (pBtn.compare (toCompare)) {
-					pBtn.playerItemButton.interactable = false;
+					pBtn.desactivateItem ();
+//					pBtn.playerItemButton.targetGraphic = "";
 				}
 			}
 		}
