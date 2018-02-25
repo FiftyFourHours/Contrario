@@ -30,6 +30,10 @@ public class PlayerFoundItemButton : MonoBehaviour {
 		particlSystem.Play();
 	}
 
+	public bool compare (Player p) {
+		return this.player.Equals (p);
+	}
+
 	// Update is called once per frame
 	void Update () {
 		if (particlSystem.isPlaying) {

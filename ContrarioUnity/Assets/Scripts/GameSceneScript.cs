@@ -34,7 +34,7 @@ public class GameSceneScript : MonoBehaviour {
 	public Text nextButtonText;
 
 	private GameState gameState;
-
+	private Player lastSpeaker;
 	private Vector3 initialCardPanelPosition;
 
 	// Use this for initialization
@@ -43,7 +43,7 @@ public class GameSceneScript : MonoBehaviour {
 		panelAllGame.GetComponent<CanvasGroup> ().alpha = 0f;
 		fakeFill ();
 		gameState = new GameState ();
-//		modalTextInfo.text = gameState.getPopupMessageFromContext ();
+
 		populatePlayerGrid ();
 		gameState.nextCard ();
 		showModal (0f, 0f);
@@ -88,6 +88,7 @@ public class GameSceneScript : MonoBehaviour {
 		
 
 	public void onNobodyButtonClicked() {
+		lastSpeaker = gameState.lastPlayerToGuess;
 		gameState.lastPlayerToGuess = null;
 		gameState.nextCard ();
 		showModal (0f, 0f);
@@ -99,6 +100,9 @@ public class GameSceneScript : MonoBehaviour {
 	}
 
 	private void quit () {
+		foreach (Player p in PlayerPrefManager.playerList) {
+			p.resetScore ();
+		}
 		SceneManager.LoadScene (Constantes.SCENE_WELCOME);
 	}
 
@@ -124,6 +128,7 @@ public class GameSceneScript : MonoBehaviour {
 			showModal (0f, 0f);
 		} else {
 			updateCardUI ();
+			disableReader ();
 			StartCoroutine (Animations.appearTop (0f, 0f, 0.8f, new Vector3 (panelCard.position.x, panelCard.position.y+ 10, panelCard.position.z), initialCardPanelPosition, panelCard));
 		}
 	}
@@ -204,6 +209,24 @@ public class GameSceneScript : MonoBehaviour {
 				break;
 			default:
 				break;
+		}
+	}
+
+	private void disableReader() {
+		Player toCompare = null;
+		if (gameState.lastPlayerToGuess != null) {
+			toCompare = gameState.lastPlayerToGuess;
+		} else if (lastSpeaker != null) {
+			toCompare = lastSpeaker;
+		}
+
+		if (toCompare != null) {
+			foreach (PlayerFoundItemButton pBtn in playerSelectContentPanel.GetComponentsInChildren<PlayerFoundItemButton> ()) {
+				pBtn.playerItemButton.interactable = true;
+				if (pBtn.compare (toCompare)) {
+					pBtn.playerItemButton.interactable = false;
+				}
+			}
 		}
 	}
 }
