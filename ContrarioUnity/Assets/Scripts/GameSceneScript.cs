@@ -88,6 +88,8 @@ public class GameSceneScript : MonoBehaviour {
 		
 
 	public void onNobodyButtonClicked() {
+		gameState.lastPlayerToGuess = null;
+		gameState.nextCard ();
 		showModal (0f, 0f);
 	}
 
