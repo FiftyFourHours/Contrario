@@ -72,7 +72,7 @@ public class PlayerSettingSceneScript : MonoBehaviour {
 				//PlayerPrefManager.playerList.Add (new Player(child.refPlayer.name));
 			}
 		}
-		SceneManager.LoadScene (Constantes.SCENE_GAME);
+		SceneManager.LoadScene (Constantes.SCENE_PACK_SELECT);
 	}
 
 	public void onAddPlayerButtonClicked() {

@@ -37,9 +37,15 @@ public class GameSceneScript : MonoBehaviour {
 	private Player lastSpeaker;
 	private Vector3 initialCardPanelPosition;
 
+	public Animation cupAppearAnim;
+	public Image shineImage;
+	public Image cupImage;
+
+
 	// Use this for initialization
 	void Start () {
 		gamePanel.gameObject.SetActive (false);
+		hideCup ();
 		panelAllGame.GetComponent<CanvasGroup> ().alpha = 0f;
 		fakeFill ();
 		gameState = new GameState ();
@@ -107,6 +113,7 @@ public class GameSceneScript : MonoBehaviour {
 	}
 
 	private void showModal(float begining, float startIn) {
+		hideCup ();
 		modalPanel.gameObject.SetActive (true);
 		ContextEnum context = gameState.getContext ();
 		modalMessage(context);
@@ -135,6 +142,9 @@ public class GameSceneScript : MonoBehaviour {
 
 	private void onModalAppear() {
 		gamePanel.gameObject.SetActive (true);
+		if (gameState.getContext () == ContextEnum.MaxScoreReached)
+			showAndAnimCup ();
+
 		panelCard.Translate (0f, 10f, 0f);
 	}
 
@@ -210,6 +220,16 @@ public class GameSceneScript : MonoBehaviour {
 			default:
 				break;
 		}
+	}
+	private void showAndAnimCup() {
+		shineImage.gameObject.SetActive (true);
+		cupImage.gameObject.SetActive (true);
+		cupAppearAnim.Play ();
+	}
+
+	private void hideCup() {
+		shineImage.gameObject.SetActive (false);
+		cupImage.gameObject.SetActive (false);
 	}
 
 	private void disableReader() {
