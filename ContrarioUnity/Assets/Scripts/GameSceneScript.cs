@@ -106,7 +106,6 @@ public class GameSceneScript : MonoBehaviour {
 
 
 	public void onQuitButtonClicked() {
-		
 		showConfirmQuitPanel ();
 	}
 
@@ -137,7 +136,7 @@ public class GameSceneScript : MonoBehaviour {
 		foreach (Player p in PlayerPrefManager.playerList) {
 			p.resetScore ();
 		}
-		SceneManager.LoadScene (Constantes.SCENE_WELCOME);
+		SceneManager.LoadScene (Constantes.SCENE_PLAYER_SETTINGS);
 	}
 
 	private void showModal(float begining, float startIn) {

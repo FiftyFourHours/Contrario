@@ -24,6 +24,6 @@ public class MainSceneScript : MonoBehaviour {
 	}
 
 	private void onFadeOoutFinished() {
-		SceneManager.LoadScene (Constantes.SCENE_PLAYER_SETTINGS);
+		SceneManager.LoadScene (Constantes.SCENE_TUTORIAL);
 	}
 }

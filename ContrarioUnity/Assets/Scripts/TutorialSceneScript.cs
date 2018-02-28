@@ -7,7 +7,7 @@ using AssemblyCSharp;
 
 public class TutorialSceneScript : MonoBehaviour {
 
-
+	public Transform panelAllGame;
 	// Use this for initialization
 	void Start () {
 //		panelAllGame.GetComponent<CanvasGroup> ().alpha = 0f;
@@ -19,7 +19,7 @@ public class TutorialSceneScript : MonoBehaviour {
 	}
 
 	public void onGoButtonClicked () {
-//		StartCoroutine(Animations.FadeOutCRWithCallBack (0f, 0f, 0.3f, panelAllGame.gameObject, onFadeOutFinished));
+		StartCoroutine(Animations.FadeOutCRWithCallBack (0f, 0f, 0.3f, panelAllGame.gameObject, onFadeOutFinished));
 	}
 
 	public void onFadeOutFinished() {
