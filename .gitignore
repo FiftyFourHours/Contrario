@@ -6,4 +6,6 @@ ContrarioUnity/[Bb]uilds/
 ContratioUnity/ContrarioUnity.userprefs
 ContrarioUnity/Assembly-CSharp.csproj
 ContrarioUnity/ProjectSettings/ProjectVersion.txt
+ContrarioUnity/ContrarioUnity.Editor.csproj
+ContrarioUnity/ContrarioUnity.csproj
 trash/
