@@ -1,11 +1,16 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/GameSceneScript.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Plugins\UnityPurchasing\script\IAPDemo.cs">
     <Files>
-      <File FileName="Assets/Scripts/PackSelectSceneScript.cs" Line="18" Column="3" />
-      <File FileName="Assets/Scripts/Utils/Constantes.cs" Line="26" Column="34" />
-      <File FileName="Assets/Scripts/ItemButton/PlayerFoundItemButton.cs" Line="43" Column="16" />
-      <File FileName="Assets/Scripts/GameSceneScript.cs" Line="132" Column="21" />
+      <File FileName="Assets\Scripts\PackSelectSceneScript.cs" Line="8" Column="1" />
+      <File FileName="Assets\Scripts\Utils\Constantes.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\ItemButton\PlayerFoundItemButton.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\GameSceneScript.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\PlayerSettingSceneScript.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\MainSceneScript.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Models\GameState.cs" Line="7" Column="53" />
+      <File FileName="Assets\Scripts\Models\Purchase.cs" Line="142" Column="70" />
+      <File FileName="Assets\Plugins\UnityPurchasing\script\IAPDemo.cs" Line="634" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

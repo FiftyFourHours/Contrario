@@ -4,34 +4,66 @@ using System;
 using System.Linq;
 using UnityEngine;
 using AssemblyCSharp;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 
 public class GameState {
 
 	public Card currentCard;
 	public int nbCard = 0;
 	public int winCardEndGame = 5;
-	private List<int> remainingCards = new List<int>();
+	private List<int> remainingCards = new List<int> ();
 
 	public Player lastPlayerToGuess = null;
 	public Player winner = null;
 
 	// Use this for initialization
 	public GameState () {
-		this.remainingCards.AddRange (Enumerable.Range (0, Constantes.WORDS_AND_DEFS.Length));
+
+		Debug.Log ("Init Card Deck with persistant data if available");
+		string filename = Application.persistentDataPath + "/remainingCards" + PlayerPrefManager.selectedPack + ".dat";
+		if (File.Exists (filename)) {
+			//Persist : Load
+			BinaryFormatter bf = new BinaryFormatter ();
+			FileStream file = File.Open (filename, FileMode.Open);
+			remainingCards = (List<int>)bf.Deserialize (file);
+			file.Close ();
+
+			if (remainingCards.Count == 0) {
+				Debug.Log ("Refill deck");
+				this.remainingCards.AddRange (Enumerable.Range (0, Constantes.WORDS_AND_DEFS[PlayerPrefManager.selectedPack].Length));
+			}
+
+		} else {
+			Debug.Log ("Refill deck (no persistant data)");
+			this.remainingCards.AddRange (Enumerable.Range (0, Constantes.WORDS_AND_DEFS[PlayerPrefManager.selectedPack].Length));
+		}
 //		nextCard ();
 	}
 
 	public void nextCard () {
 		// récupère un mot en random
-		System.Random rand = new System.Random();
+		//System.Random rand = new System.Random();
 		// s'il ne reste plus de cartes inédites
 		if (this.remainingCards.Count == 0) {
 			this.currentCard = null;
 		} else {
+			Debug.Log ("Draw a card");
 			// TODO vérifier si max(rand) ne provoque pas d'accès au-delà de la limite du tableau ( cas limites : rand(0,-1) & rand(0, length) )
-			int index = rand.Next (0, this.remainingCards.Count - 1);
-			this.currentCard = new Card (Constantes.WORDS_AND_DEFS [this.remainingCards [index]]);
+			//int index = rand.Next (0, this.remainingCards.Count - 1);
+			int index = 0; //Deterministic order
+
+			this.currentCard = new Card (Constantes.WORDS_AND_DEFS[PlayerPrefManager.selectedPack][this.remainingCards [index]]);
 			this.remainingCards.Remove (this.remainingCards [index]);
+
+			//Persist : Save
+			string filename = Application.persistentDataPath + "/remainingCards" + PlayerPrefManager.selectedPack + ".dat";
+			BinaryFormatter bf = new BinaryFormatter();
+			FileStream file = File.Create (filename);
+			bf.Serialize(file, this.remainingCards);
+			file.Close ();
+
+
 			nbCard++;
 		}
 	}

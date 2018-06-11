@@ -7,6 +7,8 @@ namespace AssemblyCSharp
 	public class PlayerPrefManager {
 		public static List<Player> playerList = new List<Player>();
 
+		public static int selectedPack = 0;
+
 		public static Player isWinnerPlayer(int scoreToWin) {
 			foreach (Player p in playerList) {
 				if (p.score == scoreToWin)
